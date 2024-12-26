@@ -119,7 +119,7 @@ func (alistServer *AlistServer) authLogin() (string, error) {
 }
 
 // 获取某个文件/目录信息
-func (alistServer *AlistServer) FsGet(path string) (FsGetData, error) {
+func (alistServer *AlistServer) FsGet(path string, ua string) (FsGetData, error) {
 	var (
 		fsGetDataResponse AlistResponse[FsGetData]
 		token             string
@@ -129,6 +129,7 @@ func (alistServer *AlistServer) FsGet(path string) (FsGetData, error) {
 		url               = alistServer.GetEndpoint() + "/api/fs/get"
 		method            = "POST"
 		payload           = strings.NewReader(fmt.Sprintf(`{"path": "%s","password": "","page": 1,"per_page": 0,"refresh": false}`, path))
+		userAgent         = ua
 	)
 
 	cacheData, found := cache.Get(alistServer.sapaceName, cacheKey)
@@ -152,6 +153,7 @@ func (alistServer *AlistServer) FsGet(path string) (FsGetData, error) {
 	}
 	req.Header.Add("Authorization", token)
 	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("User-Agent", userAgent)
 
 	res, err := client.Do(req)
 	if err != nil {

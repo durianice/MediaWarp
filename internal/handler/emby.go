@@ -185,7 +185,7 @@ func (embyServerHandler *EmbyServerHandler) ModifyPlaybackInfo(rw *http.Response
 			playbackInfoResponse.MediaSources[index].Container = &container
 			msg := fmt.Sprintf("%s 设置直链播放链接为: %s，容器为: %s", *mediasource.Name, directStreamURL, container)
 			alistServer := service.GetAlistServer(opt.(string))
-			fsGetData, err := alistServer.FsGet(*mediasource.Path)
+			fsGetData, err := alistServer.FsGet(*mediasource.Path, "")
 			if err != nil {
 				logging.Debug(msg)
 				logging.Warning("请求 FsGet 失败：", err)
@@ -266,7 +266,8 @@ func (embyServerHandler *EmbyServerHandler) VideosHandler(ctx *gin.Context) {
 				if strings.ToUpper(*mediasource.Container) == "STRM" { // 判断是否为Strm文件
 					alistServerAddr := opt.(string)
 					alistServer := service.GetAlistServer(alistServerAddr)
-					fsGetData, err := alistServer.FsGet(*mediasource.Path)
+					logging.Info("请求 FsGet 的 User-Agent：", ctx.Request.UserAgent())
+					fsGetData, err := alistServer.FsGet(*mediasource.Path, ctx.Request.UserAgent())
 					if err != nil {
 						logging.Warning("请求 FsGet 失败：", err)
 						return
