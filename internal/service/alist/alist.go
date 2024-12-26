@@ -152,9 +152,10 @@ func (alistServer *AlistServer) FsGet(path string, ua string) (FsGetData, error)
 		return fsGetDataResponse.Data, err
 	}
 	req.Header.Add("Authorization", token)
-	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("Content-Type", "application/json;charset=utf-8")
 	req.Header.Add("User-Agent", userAgent)
-
+	req.Header.Add("Host", "115.com")
+	logging.Info("AlistAPI User-Agent：", userAgent)
 	res, err := client.Do(req)
 	if err != nil {
 		err = fmt.Errorf("请求 %s 信息失败: %w", funcInfo, err)

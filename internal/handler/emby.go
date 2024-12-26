@@ -266,7 +266,6 @@ func (embyServerHandler *EmbyServerHandler) VideosHandler(ctx *gin.Context) {
 				if strings.ToUpper(*mediasource.Container) == "STRM" { // 判断是否为Strm文件
 					alistServerAddr := opt.(string)
 					alistServer := service.GetAlistServer(alistServerAddr)
-					logging.Info("请求 FsGet 的 User-Agent：", ctx.Request.UserAgent())
 					fsGetData, err := alistServer.FsGet(*mediasource.Path, ctx.Request.UserAgent())
 					if err != nil {
 						logging.Warning("请求 FsGet 失败：", err)
